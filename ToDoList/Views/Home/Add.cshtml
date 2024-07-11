@@ -1,0 +1,31 @@
+﻿@model ToDoList.Models.Task
+
+<h2>Новая задача</h2>
+
+<div asp-validation-summary="All" class="text=danger"></div>
+
+<form asp-action="Add" method="post">
+	<div class="mb-3">
+		<label asp-for="Description" class="form-label">Описание</label>
+		<input asp-for="Description" class="form-control"/>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="CategoryId" class="form-label">Категория</label>
+		<select asp-for="CategoryId" class="form-select" asp-items="@(new SelectList(ViewBag.Categories, nameof(Category.CategoryId), nameof(Category.Name)))">
+			<option value=""></option>
+		</select>
+	</div>
+
+	<div class="mb-3">
+		<label asp-for="DueDate" class="form-label">Дата выполнения</label>
+		<input asp-for="DueDate" class="form-control" type="text" />
+	</div>
+	<div class="mb-3"
+		<label asp-for="TaskStatusId" class="form-label">Статус</label>
+			<select asp-for="TaskStatusId" class="form-select" asp-items="@(new SelectList(ViewBag.TaskStatuses, nameof(ToDoList.Models.TaskStatus.TaskStatusId), nameof(ToDoList.Models.TaskStatus.Name)))">
+			</select>
+	</div>
+	<button type="submit" class="btn btn-primary">Добавить:</button>
+	<a asp-action="Index" class="btn btn-primary">Отмена</a>
+</form>

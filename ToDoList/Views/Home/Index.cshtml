@@ -1,0 +1,68 @@
+﻿@model IEnumerable<ToDoList.Models.Task>
+
+	<div class="row">
+		<div class="col-md-2">
+			<form asp-action="Filter" method="post">
+				<div class="mb-3">
+					<label class="form-label">Категория</label>
+					<select name="filter" class="form-select"
+					asp-items="@(new SelectList(ViewBag.Categories, "CategoryId", "Name", ViewBag.Filters.CategoryId))">
+					<option value="all">Все</option>
+					</select>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Период выполнения:</label>
+					<select name="filter" class="form-select"
+					asp-items="@(new SelectList(ViewBag.DueFilters, "Key", "Value", ViewBag.Filters.Due))">
+					<option value="all">Все</option>
+					</select>
+				</div>
+				<div class="mb-3">
+					<label class="form-label">Статус:</label>
+					<select name="filter" class="form-select"
+					asp-items="@(new SelectList(ViewBag.TaskStatuses, "TaskStatusId", "Name", ViewBag.Filters.TaskStatusId))">
+					<option value="all">Все</option>
+					</select>
+				</div>
+				<button type="submit" class="btn btn-primary">Фильтры</button>
+				<a asp-action="Index" asp-route-id="" class="btn btn-primary">Очистить</a>
+			</form>
+			</div>
+		<div class="col-md-10">
+		<form asp-action="MarkComplete" method="post" asp-route-id="@ViewBag.Filters.FilterString">
+			<table class="table table-borderd table-striped mt-2">
+				<thead>
+					<tr>
+						<th>Описание</th>
+						<th>Категория</th>
+						<th>Дата</th>
+						<th>Статус</th>
+						<th class="w-25"></th>
+					</tr>
+				</thead>
+				<tbody>
+				@foreach(ToDoList.Models.Task task in Model)
+				{
+					string overdue = task.Overdue ? "bg-warning" : "";
+					<tr>
+						<td>@task.Description</td>
+						<td>@task.Category.Name</td>
+						<td class="@overdue">@task.DueDate?.ToShortDateString()</td>
+						<td>
+							@if (task.TaskStatusId == "open")
+							{
+								<button type="submit" class="btn btn-primary btn-sm"
+								name="@nameof(ToDoList.Models.Task.Id)" value="@task.Id">Задача завершена</button>
+							}
+						</td>
+					</tr>
+				}
+			</tbody>
+			</table>
+		</form>
+		<form asp-action="DeleteComplete" method="post" asp-route-id="@ViewBag.Filters.FilterString">
+			<a asp-action="Add" class="btn btn-primary">Добавить новую задачу</a>
+			<button type="submit" class="btn btn-primary">Удалить завершенные задачи</button>
+		</form>
+		</div>
+	</div>
